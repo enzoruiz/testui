@@ -70,6 +70,7 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
+import { RelativeTime } from "@/components/relative-time"
 import { cn } from "@/lib/utils"
 
 // Types
@@ -307,21 +308,7 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-function formatRelativeDate(date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMins = Math.floor(diffMs / (1000 * 60))
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
-  if (diffMins < 1) return "ahora"
-  if (diffMins < 60) return `hace ${diffMins} min`
-  if (diffHours < 24) return `hace ${diffHours}h`
-  if (diffDays === 1) return "ayer"
-  if (diffDays < 7) return `hace ${diffDays} días`
-  if (diffDays < 30) return `hace ${Math.floor(diffDays / 7)} sem`
-  return date.toLocaleDateString("es-PE", { day: "numeric", month: "short" })
-}
 
 function getFileIcon(fileType: Document["fileType"]) {
   const colors: Record<Document["fileType"], string> = {
@@ -805,9 +792,9 @@ export default function CaseDetailPage() {
                             <span className="text-sm text-[#64748B]">{doc.uploadedBy.name}</span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-sm text-[#64748B]">
-                          {formatRelativeDate(doc.uploadedAt)}
-                        </TableCell>
+<TableCell className="text-sm text-[#64748B]">
+<RelativeTime date={doc.uploadedAt} />
+</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <Button variant="ghost" size="icon" className="h-8 w-8 text-[#64748B] hover:text-[#0F172A]">
@@ -886,7 +873,7 @@ export default function CaseDetailPage() {
                             <StatusBadge type={query.mode} />
                           </div>
                         </div>
-                        <span className="text-sm text-[#64748B]">{formatRelativeDate(query.createdAt)}</span>
+                        <RelativeTime date={query.createdAt} className="text-sm text-[#64748B]" />
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
